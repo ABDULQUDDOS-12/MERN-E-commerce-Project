@@ -1,30 +1,35 @@
+const ErrorHandle = require("../Utils/erorrHandler");
 const Product = require("../models/productModel");
+const catchAsyncErrors = require('../middleware/catchAsyncError'); 
+const ApiFeatures = require("../Utils/apifeatures");
 //create Product --Admin
-exports.createproduct = async (req, res, next) => {
+exports.createproduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,
     product,
   });
-};
+});
 //Get All Products
-exports.getAllProducts = async (req, res) => {
-  const products = await Product.find();
+exports.getAllProducts = catchAsyncErrors(async (req, res) => {
+  const apiFeature = new ApiFeatures(Product.find(),req.query).search()
+  const products = await apiFeature.query; 
   res.status(201).json({
     success: true,
     products,
   });
-};
+});
 
 //Update Products -- Admin
-exports.updateProducts = async (req, res, next) => {
+exports.updateProducts = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
   if (!product) {
-    res.status(500),
-      json({
-        success: false,
-        message: "Product not found",
-      });
+     return next(new ErrorHandle("Product not found",404))
+    // res.status(500),
+    //   json({
+    //     success: false,
+    //     message: "Product not found",
+    //   });
   } else {
     product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -36,22 +41,40 @@ exports.updateProducts = async (req, res, next) => {
       product,
     });
   }
-};
+});
 
 //Delete Product
-exports.deleteProducts = async (req, res, next) => {
+exports.deleteProducts = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
-    res.status(500),
-      json({
-        success: false,
-        message: "Product not found",
-      });
+    return next(new ErrorHandle("Product not found",404))
+    // res.status(500),
+    //   json({
+    //     success: false,
+    //     message: "Product not found",
+    //   });
   } else {
     await product.deleteOne();
     res.status(201).json({
       success: true,
-      message:`Product with this id: ${req.params.id} is removed from database successfully`
+      message: `Product with this id: ${req.params.id} is removed from database successfully`,
     });
   }
-};
+});
+//Get product Details
+exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    return next(new ErrorHandle("Product not found!", 404));
+    // res.status(500),
+    // json({
+    //   success:false,
+    //   message:"Product Not Found"
+    // })
+  } else {
+    res.status(201).json({
+      success: true,
+      product,
+    });
+  }
+});
