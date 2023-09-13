@@ -86,3 +86,26 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
     });
   }
 });
+
+
+//Create new reviews or update reviews
+
+exports.createProductReviews = catchAsyncErrors(async(req,res,next)=>{
+  const {rating,comment,productId} = req.body  
+  const review = {
+       user:req.user.id,
+       name:req.user.name,
+       rating:Number(rating),
+       comment,
+    };
+    const product = await Product.findById(productId);
+    const isReviewed = product.reviews.find(rev=>rev.user)
+    if(isReviewed){
+
+    }
+    else{
+      product.reviews.push(review)
+    }
+
+
+})

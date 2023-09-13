@@ -176,3 +176,47 @@ exports.resetPassword = catchAsyncErrors(async(req,res,next)=>{
        user,
      })
   })
+
+
+   //Update User Role  -- Admin
+   exports.updateUserRole = catchAsyncErrors(async(req,res,next)=>{ 
+    const newUserData ={
+         name:req.body.name,
+         email:req.body.email,
+         role:req.body.role
+    }
+  // We will add cloudinary later
+    const user =await User.findByIdAndUpdate(req.params.id,newUserData,{
+      new:true,
+      runValidators:true,
+      userFindAndModify:false,
+    })
+    res.status(200).json({
+      success:true,
+    })
+  })  
+
+
+
+   //Delete User -- Admin
+   exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+  
+    if (!user) {
+      return next(new ErrorHandler(`User does not exist with id: ${req.params.id}`));
+    }
+  
+    // Use 'user.remove()' to delete the specific user
+    await user.deleteOne();
+  
+    res.status(200).json({
+      success: true,
+      message:"User Deleted Successfully"
+    });
+  });
+  
+  
+  
+  
+  
+  
