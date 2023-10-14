@@ -113,8 +113,12 @@ exports.createProductReviews = catchAsyncErrors(async(req,res,next)=>{
     
     //4,5,5,2=16/4=4
     let avg = 0;
-    product.ratings = product.reviews.reduce((sum, rev) => sum + rev.rating, 0) / product.reviews.length;
-
+    product.reviews.forEach((rev)=>{
+      avg += rev.rating;
+    })
+    product.ratings =(avg / product.reviews.length);
+    /* product.ratings = product.reviews.reduce((sum, rev) => sum + rev.rating, 0) /product.reviews.length;
+      product.ratings= avg/product.reviews.length;*/
     await product.save({validateBeforeSave:false})
     res.status(200).json({
       success:true,
