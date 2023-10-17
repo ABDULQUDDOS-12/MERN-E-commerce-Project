@@ -103,12 +103,31 @@ exports.updateOrder = catchAsyncErrors(async(req,res,next)=>{
   {
     return next("You have already delievered this product",400)
   }
-  order.orderItems.forEach(order=>{
+  order.orderItems.forEach(async(order)=>{
     await updateStock(order.product,order.quantity);
   });
   order.orderStatus = req.body.status;
-  order
+   if(req.body.status==="Delievered"){
+    order.delieverAt = Date.now();
+   }
+   await order.save({validateBeforeSave:false})
+  res.status(200).json({
+   success:true,
+  })
+})
 
+async function updateStock(id,quantity){
+  const product = await Product.findById(id);
+  product.stock = product.stock - quantity;
+  await product.save({validateBeforeSave:false})
+}
+
+
+
+//Delete Orders  --admin
+exports.deleteOrder = catchAsyncErrors(async(req,res,next)=>{
+  const orders = await Order.find(req.params.id);
+  await order.remove() 
   res.status(200).json({
    success:true,
   })
