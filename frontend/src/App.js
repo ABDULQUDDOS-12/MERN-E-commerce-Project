@@ -16,7 +16,7 @@ function App() {
   return (
     <Router>
       <Header />
-      <Routes> {/* You can use Routes if you have multiple Route components */}
+      <Routes> 
         <Route exact path="/" element={<Home />} />
       </Routes>
       <Footer />
