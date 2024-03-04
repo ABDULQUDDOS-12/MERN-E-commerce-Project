@@ -1,8 +1,10 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import {CgMouse} from "react-icons/cg"
 import './Home.css'
 import Product from './Product.jsx'
 import MetaData from '../layout/MetaData.jsx'
+import { getProduct } from '../../Actions/productAction.jsx'
+import {useDispatch} from "react-redux"
 const product = {
   name:"Blue Tshirt",
   images:[{url:"https://i.ibb.co/DRST11n/1.webp"}],
@@ -10,6 +12,11 @@ const product = {
   _id:"Abdul Quddos"
 }
 const Home = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getProduct());
+  }, [dispatch])
+  
 return (
     <Fragment>
         <MetaData title={"Ecommerce"}></MetaData>
