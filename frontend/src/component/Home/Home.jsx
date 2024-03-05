@@ -5,6 +5,7 @@ import Product from './Product.jsx'
 import MetaData from '../layout/MetaData.jsx'
 import { getProduct } from '../../Actions/productAction.jsx'
 import {useSelector,useDispatch} from "react-redux"
+import Loader from '../layout/Loader/Loader.jsx'
 // const product = {
 //   name:"Blue Tshirt",
 //   images:[{url:"https://i.ibb.co/DRST11n/1.webp"}],
@@ -19,7 +20,7 @@ const Home = () => {
   const{loading,error,products,productsCount} = useSelector(state=>state.products)
 return (
 <Fragment>
-  {loading ? "Loading" :      <Fragment>
+  {loading ? <Loader/> :      <Fragment>
         <MetaData title={"Ecommerce"}></MetaData>
         <div className="banner">
             <p>Welcome to ecommerce</p>
