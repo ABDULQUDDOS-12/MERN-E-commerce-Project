@@ -6,18 +6,24 @@ import MetaData from '../layout/MetaData.jsx'
 import { getProduct } from '../../Actions/productAction.jsx'
 import {useSelector,useDispatch} from "react-redux"
 import Loader from '../layout/Loader/Loader.jsx'
+import { useAlert } from 'react-alert'
 // const product = {
 //   name:"Blue Tshirt",
 //   images:[{url:"https://i.ibb.co/DRST11n/1.webp"}],
 //   price:"RS3000",
 //   _id:"Abdul Quddos"
 // }
+
 const Home = () => {
+  const{loading,error,products,productsCount} = useSelector(state=>state.products)
+  const alert = useAlert();
   const dispatch = useDispatch();
   useEffect(() => {
+    if(error){
+      return alert.error("error")
+    }
     dispatch(getProduct());
-  }, [dispatch])
-  const{loading,error,products,productsCount} = useSelector(state=>state.products)
+  }, [dispatch,error])
 return (
 <Fragment>
   {loading ? <Loader/> :      <Fragment>
