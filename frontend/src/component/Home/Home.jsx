@@ -20,7 +20,7 @@ const Home = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     if(error){
-      return alert.error("error")
+      return alert.error(error)
     }
     dispatch(getProduct());
   }, [dispatch,error])
